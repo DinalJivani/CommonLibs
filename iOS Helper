@@ -1,4 +1,48 @@
 
+//Background Task manager
+
+.h 
+
+@property (nonatomic) UIBackgroundTaskIdentifier bgTask;
+
+
+.m
+
+In n applicationDidEnterBackground
+
+UIApplication *app = [UIApplication sharedApplication];
+    self.bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
+        [app endBackgroundTask:self.bgTask];
+    }];
+
+In applicationDidBecomeActive
+
+// End Background Task
+    if (self.bgTask != UIBackgroundTaskInvalid) {
+        [[UIApplication sharedApplication] endBackgroundTask:self.bgTask];
+    }
+
+
+//Privacy and Terms click
+
+        self.lblTermsAndPolicy.isUserInteractionEnabled = true
+        let tapgesture = UITapGestureRecognizer(target: self, action: #selector(tappedOnLabel(_ :)))
+        tapgesture.numberOfTapsRequired = 1
+        self.lblTermsAndPolicy.addGestureRecognizer(tapgesture)
+
+
+    @objc func tappedOnLabel(_ gesture: UITapGestureRecognizer) {
+        guard let text = self.lblTermsAndPolicy.text else { return }
+        let privacyPolicyRange = (text as NSString).range(of: "Privacy Policy.")
+        let termsAndConditionRange = (text as NSString).range(of: "Terms of Use")
+        if gesture.didTapAttributedTextInLabel(label: self.lblTermsAndPolicy, inRange: privacyPolicyRange) {
+            let vc = self.storyboard?.instantiateViewController(identifier: "PrivacyPolicyVC")as! PrivacyPolicyVC
+            self.navigationController?.pushViewController(vc, animated: true)
+        } else if gesture.didTapAttributedTextInLabel(label: self.lblTermsAndPolicy, inRange: termsAndConditionRange){
+            let vc = self.storyboard?.instantiateViewController(identifier: "TermsVC")as! TermsVC
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
 
 //iOS SWIFT 13 Change
 //Changes in iOS 13
