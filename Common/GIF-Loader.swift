@@ -1,5 +1,3 @@
-
-
 import UIKit
 import ImageIO
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
