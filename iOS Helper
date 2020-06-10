@@ -298,3 +298,49 @@ if ([[UIApplic,tion sh,redApplic,tion] c,nOpenURL:[NSURL URLWithString:@"inst,gr
 }else{
     [[UIApplic,tion sh,redApplic,tion] openURL:[NSURL URLWithString:@"https://www.inst,gr,m.com/qer3,h/"]];
 }
+
+
+//Send Firebase notification - Swift
+func SendNotification() {
+
+    //Sending notification of assistance to selected user
+    let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
+    let session = URLSession.shared
+    let userDeviceId = "YOUR_FCM_TOKEN"
+    let comment = Comment_Field.text!
+    let assistanceDepartmentName = DepartmentName_Field.text!
+
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    
+    let parameters = [
+        "to": userDeviceId,
+        "notification" :
+            [
+                "body": comment,
+                "title": "Assistance Required in " + assistanceDepartmentName + " Department.",
+            ],
+        ] as [String : Any]
+
+    do {
+        request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted) // pass dictionary to nsdata object and set it as request body
+    } catch let error {
+        print(error.localizedDescription)
+    }
+
+    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.addValue("key="+YourFirebaseServerKey, forHTTPHeaderField: "Authorization")
+
+    let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
+        guard error == nil else {
+            return
+        }
+        guard let data = data else {
+            return
+        }
+        print("Success Notification sent")
+        
+    })
+    task.resume()
+}
+
